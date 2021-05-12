@@ -36,7 +36,7 @@ namespace configs
         inline constexpr int section18 = 125; /* translation */
         // inline constexpr int section19 = 127; /* internal_mod */
         inline constexpr int section20 = 127; /* context */
-        // inline constexpr int section21 = 207; /* theme */
+        // inline constexpr int section21 = 210; /* theme */
     }
 }
 
@@ -4971,6 +4971,48 @@ namespace cfg
         using mapped_type = sesman_and_spec_type;
         type value {  };
     };
+    /// type: std::string <br/>
+    /// sesman ⇒ proxy <br/>
+    /// default: {} <br/>
+    struct context::banner_message {
+        static constexpr bool is_sesman_to_proxy = true;
+        static constexpr bool is_proxy_to_sesman = false;
+        // for old cppcheck
+        // cppcheck-suppress obsoleteFunctionsindex
+        static constexpr ::configs::authid_t index { ::configs::cfg_indexes::section20 + 80};
+        using type = std::string;
+        using sesman_and_spec_type = std::string;
+        using mapped_type = sesman_and_spec_type;
+        type value {  };
+    };
+    /// type: BannerType <br/>
+    /// sesman ⇒ proxy <br/>
+    /// default: {} <br/>
+    struct context::banner_type {
+        static constexpr bool is_sesman_to_proxy = true;
+        static constexpr bool is_proxy_to_sesman = false;
+        // for old cppcheck
+        // cppcheck-suppress obsoleteFunctionsindex
+        static constexpr ::configs::authid_t index { ::configs::cfg_indexes::section20 + 81};
+        using type = BannerType;
+        using sesman_and_spec_type = BannerType;
+        using mapped_type = sesman_and_spec_type;
+        type value {  };
+    };
+    /// type: bool <br/>
+    /// sesman ⇒ proxy <br/>
+    /// default: false <br/>
+    struct context::banner_activate {
+        static constexpr bool is_sesman_to_proxy = true;
+        static constexpr bool is_proxy_to_sesman = false;
+        // for old cppcheck
+        // cppcheck-suppress obsoleteFunctionsindex
+        static constexpr ::configs::authid_t index { ::configs::cfg_indexes::section20 + 82};
+        using type = bool;
+        using sesman_and_spec_type = bool;
+        using mapped_type = sesman_and_spec_type;
+        type value {  };
+    };
 
     /// Enable custom theme color configuration. Each theme color can be defined as HTML color code (white: #FFFFFF, black: #000000, blue: #0000FF, etc) <br/>
     /// type: bool <br/>
@@ -5601,6 +5643,7 @@ struct context
 , cfg::context::rd_shadow_invitation_id
 , cfg::context::rd_shadow_invitation_addr
 , cfg::context::smartcard_login
+, cfg::context::banner_message
 , cfg::context::opt_bpp
 , cfg::context::opt_height
 , cfg::context::opt_width
@@ -5630,6 +5673,8 @@ struct context
 , cfg::context::rd_shadow_invitation_error_code
 , cfg::context::rd_shadow_invitation_port
 , cfg::context::rail_module_host_mod_is_active
+, cfg::context::banner_type
+, cfg::context::banner_activate
 { static constexpr bool is_section = true; };
 
 struct theme
@@ -5892,6 +5937,9 @@ using VariablesAclPack = Pack<
 , cfg::context::rd_shadow_invitation_addr
 , cfg::context::rd_shadow_invitation_port
 , cfg::context::smartcard_login
+, cfg::context::banner_message
+, cfg::context::banner_type
+, cfg::context::banner_activate
 >;
 
 
@@ -5899,7 +5947,7 @@ constexpr U64BitFlags<4> loggable_field{ {
   0b1111111111111111111111111111111111111111111111111110111111111111
 , 0b1110011111111111111111111111111011111111111111111111111111111111
 , 0b1011111111111111111111111111111111111111111101101111101111111111
-, 0b0000000000000000000000000000000000000000000000000111111111111111
+, 0b0000000000000000000000000000000000000000000000111111111111111111
 },
 {
   0b0000000000000000000000000000000000000000000000000000000000000000

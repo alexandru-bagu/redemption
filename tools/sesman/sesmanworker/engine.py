@@ -34,7 +34,7 @@ except Exception:
     tracelog = traceback.format_exc()
     try:
         from .fake.proxyengine import *
-        LOCAL_TRACE_PATH_RDP = u'/var/wab/recorded/rdp/'
+        LOCAL_TRACE_PATH_RDP = u'/var/rdpproxy/recorded/rdp/'
         Logger().info("================================")
         Logger().info("==== Load Fake PROXY ENGINE ====")
         Logger().info("================================")
@@ -147,6 +147,7 @@ class Engine(object):
         self.session_id = None
         self.auth_x509 = None
         self._trace_type = None                 # local ?
+        self._banner = {}
         self.challenge = None
         self.session_record = None
         self.session_record_type = None
@@ -334,6 +335,17 @@ class Engine(object):
                           "'wabengine', key 'trace', (((%s)))" %
                           traceback.format_exc())
         return u'localfile_hashed'
+
+    def get_banner(self):
+        try:
+            self._banner = self.wabengine_conf.get('banner')
+        except Exception:
+            import traceback
+            Logger().info("Engine get_banner failed: "
+                          "configuration file section "
+                          "'wabgine', key 'trace', (((%s)))" %
+                          traceback.format_exc())
+        return self._banner
 
     def get_trace_encryption_key(self, path, old_scheme=False):
         return self.wabengine.get_trace_encryption_key(path, old_scheme)

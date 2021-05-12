@@ -377,6 +377,7 @@ class Sesman():
         self.shared[u'reporting'] = u''
 
         self._trace_type = self.engine.get_trace_type()
+        self._banner = self.engine.get_banner()
         self.language = None
         self.pid = os.getpid()
 
@@ -1005,6 +1006,7 @@ class Sesman():
 
             self.language = self.engine.get_language()
             self.load_login_message(self.language)
+            self._load_banner_message()
 
             self.rdplog.log("AUTHENTICATION_SUCCESS", method=method)
             Logger().info(u'lang=%s' % self.language)
@@ -1937,7 +1939,7 @@ class Sesman():
                     else:
                         effective_krb_armoring_user = krb_armoring_fallback_user
                         effective_krb_armoring_password = krb_armoring_fallback_password
-                    
+
                     if krb_armoring_realm:
                         effective_krb_armoring_user += '@' + krb_armoring_realm
 
@@ -2812,6 +2814,33 @@ class Sesman():
         response = pm_request(self.engine, self.shared.get("pm_request"))
         self.shared["pm_request"] = u""
         self.send_data({'pm_response': json.dumps(response)})
+
+    def _load_banner_message(self):
+        if not self._banner:
+            return
+
+        banner_message = self._banner.get("message", "")
+        banner_type = self._banner.get("type", "")
+        banner_activate = self._banner.get("activate", "")
+
+        if banner_activate is False or not banner_message:
+            return
+
+        if (banner_type == "info"
+            or (banner_type != "warn" and banner_type != "alert")):
+            banner_type = 0
+        elif banner_type == "warn":
+            banner_type = 1
+        elif banner_type == "alert":
+            banner_type = 2
+
+        data_to_send = {
+            u"banner_message" : banner_message,
+            u"banner_type" : banner_type,
+            u"banner_activate" : banner_activate
+        }
+
+        self.send_data(data_to_send)
 
 
 # END CLASS - Sesman

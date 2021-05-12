@@ -408,6 +408,7 @@ private:
     }
 
     bool is_first_looping_on_mod_selector = true;
+    bool is_mod_selector_after_mod_login = false;
     std::string session_type;
 
     void next_backend_module(
@@ -508,6 +509,7 @@ private:
 
         case ModuleName::login:
             log_proxy::set_user("");
+            this->is_mod_selector_after_mod_login = true;
             inactivity.stop();
             mod_pack = mod_factory.create_login_mod();
             break;
@@ -994,6 +996,21 @@ private:
                             mod.acl_update(updated_fields);
                             back_event = std::max(back_event, mod.get_mod_signal());
                         }
+                    }
+
+                    if (mod_wrapper.current_mod == ModuleName::selector
+                        && this->is_mod_selector_after_mod_login)
+                    {
+                        if (this->ini.get<cfg::context::banner_activate>())
+                        {
+                            const std::string& banner_message =
+                                this->ini.get<cfg::context::banner_message>();
+                            BannerType banner_type =
+                                this->ini.get<cfg::context::banner_type>();
+
+                            mod_wrapper.display_osd_message(banner_message);
+                        }
+                        this->is_mod_selector_after_mod_login = false;
                     }
                 }
 
